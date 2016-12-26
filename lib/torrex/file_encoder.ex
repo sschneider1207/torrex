@@ -1,5 +1,10 @@
 defmodule Torrex.FileEncoder do
   @moduledoc """
+  Hashes all the pieces of a file or list of files with the SHA1 algorithm and
+  combines them together in a single binary.
+  """
+
+  @doc """
   Encodes the sha1 hash for the parts of a file or list of files in a single binary.
   """
   @spec encode(String.t | [String.t], non_neg_integer) :: <<_::_ * 20>>
