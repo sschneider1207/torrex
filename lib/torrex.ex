@@ -76,7 +76,7 @@ defmodule Torrex do
   @doc """
   Encodes a file or directory to a .torrent file.
   """
-  @spec encode(encodable, String.t, options) :: {:ok, String.t}
+  @spec encode(encodable, String.t, options) :: String.t
   def encode(path, announce, opts \\ []) do
     type = case File.dir?(path) do
       true -> :dir
