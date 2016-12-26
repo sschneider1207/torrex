@@ -89,6 +89,7 @@ defmodule Torrex do
       "encoding" => "UTF-8"
     }
     |> set_options(opts)
+    |> write_to_file(path, opts)
   end
 
   defp encode_info(:file, path, piece_length, opts) do
@@ -177,6 +178,30 @@ defmodule Torrex do
       author when is_bitstring(author) -> Map.put(dict, "created by", author)
       _ -> dict
     end
+  end
+
+  defp write_to_file(dict, path, opts) do
+    iodata = Benx.encode(dict)
+    name = determine_torrent_name(path, opts)
+    File.write!(name, iodata)
+    name
+  end
+
+  defp determine_torrent_name(path, opts) do
+    case opts[:output] do
+      name when is_bitstring(name) -> name
+      _ -> name_from_path(path)
+    end
+    |> Kernel.<>(".torrent")
+  end
+
+  defp name_from_path(path) do
+    case File.dir?(path) do
+      true -> path
+      _ -> Path.rootname(path)
+    end
+    |> Path.split()
+    |> List.last()
   end
 
   @doc """
