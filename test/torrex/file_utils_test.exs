@@ -56,4 +56,19 @@ defmodule Torrex.FileUtilsTest do
     paths = :lists.reverse(reversed_paths)
     assert FileUtils.hash_pieces(paths, piece_length) === final_sha
   end
+
+  test "traverse directory lists all files" do
+    dir = "rand_files"
+    File.mkdir!(dir)
+    on_exit(fn -> File.rmdir!(dir) end)
+    files =
+      Enum.map(1..5, fn _ -> Utils.temp_file(<<>>, dir) end)
+      |> Enum.sort()
+
+    traversed_files =
+      FileUtils.traverse_dir(dir)
+      |> Enum.sort()
+
+    assert traversed_files === files
+  end
 end

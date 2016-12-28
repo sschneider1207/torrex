@@ -207,7 +207,7 @@ defmodule Torrex do
   @doc """
   Decodes a .torrent file.
   """
-  @spec decode(String.t) :: map
+  @spec decode(file) :: map
   def decode(path) do
     path
     |> File.read!()

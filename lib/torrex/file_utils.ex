@@ -1,6 +1,6 @@
 defmodule Torrex.FileUtils do
   @moduledoc """
-  Functions related to hashing files.
+  Torrent-related file helpers.
   """
 
   @doc """
@@ -32,7 +32,7 @@ defmodule Torrex.FileUtils do
   end
 
   @doc """
-  Lists all the files in a directory with their paths relative to the directory.
+  Lists all the files in a directory.
   """
   @spec traverse_dir(String.t) :: [String.t]
   def traverse_dir(path) do
