@@ -9,10 +9,10 @@ defmodule Torrex.FileUtils do
   @spec hash_pieces(String.t | [String.t], non_neg_integer) :: <<_::_ * 20>>
   def hash_pieces(paths, piece_length) when is_list(paths) do
     paths
-    |> Enum.map(&encode(&1, piece_length))
+    |> Enum.map(&hash_pieces(&1, piece_length))
     |> Enum.reduce(<<>>, &Kernel.<>(&2, &1))
   end
-  def encode(path, piece_length) do
+  def hash_pieces(path, piece_length) do
     path
     |> File.stream!([], piece_length)
     |> Stream.map(&:crypto.hash(:sha, &1))
