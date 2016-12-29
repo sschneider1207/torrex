@@ -1,3 +1,4 @@
+alias Experimental.Flow
 defmodule Torrex.FileUtils do
   @moduledoc """
   Torrent-related file helpers.
@@ -9,8 +10,12 @@ defmodule Torrex.FileUtils do
   @spec hash_pieces(String.t | [String.t], non_neg_integer) :: <<_::_ * 20>>
   def hash_pieces(paths, piece_length) when is_list(paths) do
     paths
-    |> Enum.map(&hash_pieces(&1, piece_length))
-    |> Enum.reduce(<<>>, &Kernel.<>(&2, &1))
+    |> Enum.with_index()
+    |> Flow.from_enumerable()
+    |> Flow.map(fn {path, index} -> {hash_pieces(path, piece_length), index} end)
+    |> Enum.to_list()
+    |> Enum.sort_by(fn {_, index} -> index end)
+    |> Enum.reduce(<<>>, fn {piece, _index}, acc -> acc <> piece end)
   end
   def hash_pieces(path, piece_length) do
     path
@@ -34,10 +39,20 @@ defmodule Torrex.FileUtils do
   @doc """
   Lists all the files in a directory.
   """
-  @spec traverse_dir(String.t) :: [String.t]
-  def traverse_dir(path) do
-    path
-    |> to_charlist()
-    |> :filelib.fold_files('.', true, fn name, acc -> [to_string(name)|acc] end, [])
+  @spec traverse_dir(String.t, integer) :: [String.t]
+  def traverse_dir(directory, timeout \\ 30_000) do
+    {dirs, files} =
+      directory
+      |> File.ls!()
+      |> Enum.map(&Path.join(directory, &1))
+      |> Enum.partition(&File.dir?/1)
+
+    dir_files =
+      dirs
+      |> Enum.map(&Task.async(__MODULE__, :traverse_dir, [&1, timeout]))
+      |> Enum.map(&Task.await(&1, timeout))
+      |> List.flatten()
+
+    files ++ dir_files
   end
 end
