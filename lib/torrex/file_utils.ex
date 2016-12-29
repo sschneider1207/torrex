@@ -1,4 +1,3 @@
-alias Experimental.Flow
 defmodule Torrex.FileUtils do
   @moduledoc """
   Torrent-related file helpers.
@@ -10,13 +9,6 @@ defmodule Torrex.FileUtils do
   @spec hash_pieces(String.t | [String.t], non_neg_integer) :: <<_::_ * 20>>
   def hash_pieces(paths, piece_length) when is_list(paths) do
     do_hash_pieces(paths, piece_length)
-    #paths
-    #|> Enum.with_index()
-    #|> Flow.from_enumerable()
-    #|> Flow.map(fn {path, index} -> {hash_pieces(path, piece_length), index} end)
-    #|> Enum.to_list()
-    #|> Enum.sort_by(fn {_, index} -> index end)
-    #|> Enum.reduce(<<>>, fn {piece, _index}, acc -> acc <> piece end)
   end
   def hash_pieces(path, piece_length) do
     path

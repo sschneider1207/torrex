@@ -18,7 +18,7 @@ defmodule Torrex.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :benx, :gen_stage]]
+    [applications: [:logger, :benx]]
   end
 
   # Dependencies can be Hex packages:
@@ -36,7 +36,6 @@ defmodule Torrex.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:benx, in_umbrella: true},
-     {:gen_stage, "~> 0.10.0"},
      {:ex_doc, "~> 0.14.5", only: :dev}]
   end
 end
