@@ -3,7 +3,7 @@ defmodule Torrex.Mixfile do
 
   def project do
     [app: :torrex,
-     version: "0.1.0",
+     version: "0.1.1",
      build_path: "../../_build",
      config_path: "../../config/config.exs",
      deps_path: "../../deps",
@@ -21,7 +21,7 @@ defmodule Torrex.Mixfile do
   end
 
   defp deps do
-    [{:benx, "~> 0.1.1"},
+    [{:benx, "~> 0.1.2"},
      {:ex_doc, "~> 0.14.5", only: :dev}]
   end
 
