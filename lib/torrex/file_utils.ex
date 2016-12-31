@@ -32,10 +32,10 @@ defmodule Torrex.FileUtils do
     end
   end
 
-  def do_hash_pieces_rem([], _piece_length, acc, partial_piece, _rem_bytes) do
+  defp do_hash_pieces_rem([], _piece_length, acc, partial_piece, _rem_bytes) do
     acc <> :crypto.hash(:sha, partial_piece)
   end
-  def do_hash_pieces_rem([path|rest], piece_length, acc, partial_piece, rem_bytes) do
+  defp do_hash_pieces_rem([path|rest], piece_length, acc, partial_piece, rem_bytes) do
     size = :filelib.file_size(path)
     {:ok, file} = :file.open(path, [:read, :raw, :binary])
     cond do

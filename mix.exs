@@ -11,31 +11,31 @@ defmodule Torrex.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     description: description,
+     package: package,
      deps: deps]
   end
 
-  # Configuration for the OTP application
-  #
-  # Type "mix help compile.app" for more information
   def application do
     [applications: [:logger, :benx]]
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # To depend on another app inside the umbrella:
-  #
-  #   {:myapp, in_umbrella: true}
-  #
-  # Type "mix help deps" for more examples and options
   defp deps do
-    [{:benx, in_umbrella: true},
+    [{:benx, "~> 0.1.1"},
      {:ex_doc, "~> 0.14.5", only: :dev}]
+  end
+
+  defp description do
+    """
+    Create torrent files from single or multiple files.
+    """
+  end
+
+  defp package do
+    [name: :torrex,
+     files: ["lib", "mix.exs", "README*", "LICENSE*"],
+     maintainers: ["Sam Schneider"],
+     licenses: ["MIT"],
+     links: %{github: "https://github.com/sschneider1207/torrex"}]
   end
 end

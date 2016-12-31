@@ -29,7 +29,7 @@ defmodule Torrex.FileUtilsTest do
       assert FileUtils.hash_pieces(path, piece_length) === final_sha
   end
 
-  test "multiple files are encoded correctly" do
+  test "multiple files of even piece size are encoded correctly" do
     piece_length = 524
     num_pieces = 1_000
     num_files = 10
@@ -55,6 +55,19 @@ defmodule Torrex.FileUtilsTest do
       end)
     paths = :lists.reverse(reversed_paths)
     assert FileUtils.hash_pieces(paths, piece_length) === final_sha
+  end
+
+  test "multiple files with uneven pieces are encoded correctly" do
+    piece_length = 100
+    bytes = :crypto.strong_rand_bytes(1024)
+
+    single_file = Utils.temp_file(bytes)
+    sha1 = FileUtils.hash_pieces(single_file, piece_length)
+
+    <<file1 :: binary-110, file2 :: binary-110, file3 :: binary-110, file4 :: binary>> = bytes
+    files = [Utils.temp_file(file1), Utils.temp_file(file2), Utils.temp_file(file3), Utils.temp_file(file4)]
+
+    assert FileUtils.hash_pieces(files, piece_length) === sha1
   end
 
   test "traverse directory lists all files" do
