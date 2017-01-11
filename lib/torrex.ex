@@ -207,11 +207,21 @@ defmodule Torrex do
   @doc """
   Decodes a .torrent file.
   """
-  @spec decode(file) :: map
+  @spec decode(file) :: {:ok, map} | {:error, term}
   def decode(path) do
-    path
-    |> File.read!()
-    |> :erlang.binary_to_list()
-    |> Benx.decode!()
+    with {:ok, bin} <- File.read(path),
+         iodata = :erlang.binary_to_list(bin),
+         do: Benx.decode(iodata)
+  end
+
+  @doc """
+  See `decode/1`, raises on errors.
+  """
+  @spec decode!(String.t) :: map
+  def decode!(path) do
+    case decode(path) do
+      {:ok, path} -> path
+      {:error, _err} -> raise "unable to decode #{path}"
+    end
   end
 end
